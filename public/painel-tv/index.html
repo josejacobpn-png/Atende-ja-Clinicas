@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atende Já - Painel TV</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #020617; /* Slate 950 */
+      --card-bg: #0f172a; /* Slate 900 */
+      --card-border: #1e293b; /* Slate 800 */
+      --text-main: #f8fafc; /* Slate 50 */
+      --text-muted: #94a3b8; /* Slate 400 */
+      --primary: #f59e0b; /* Amber 500 */
+      --success: #10b981; /* Emerald 500 */
+      --info: #06b6d4; /* Cyan 500 */
+      --danger: #ef4444; /* Red 500 */
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TELA DE SELEÇÃO DE UNIDADE */
+    #unit-selection-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #090d16;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 24px;
+    }
+
+    .selection-box {
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .logo-container {
+      height: 80px;
+      width: 180px;
+      margin: 0 auto 32px auto;
+      background-color: #ffffff;
+      padding: 8px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    }
+
+    .logo-container img {
+      height: 100%;
+      width: 100%;
+      object-fit: contain;
+    }
+
+    .selection-box h1 {
+      font-size: 28px;
+      font-weight: 900;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      letter-spacing: -0.025em;
+    }
+
+    .selection-box p {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .unit-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .unit-btn {
+      width: 100%;
+      padding: 20px;
+      background-color: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 16px;
+      text-align: left;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .unit-btn:hover {
+      border-color: var(--info);
+      background-color: #1e293b;
+    }
+
+    .unit-btn .unit-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--info);
+    }
+
+    .unit-btn .unit-address {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* HEADER DO PAINEL */
+    header {
+      height: 10vh;
+      background-color: var(--card-bg);
+      border-bottom: 1px solid var(--card-border);
+      padding: 0 3vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .header-logo-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-logo-container {
+      height: 5vh;
+      width: 12vw;
+      background-color: #ffffff;
+      padding: 0.5vh;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .header-logo-container img {
+      height: 100%;
+      width: 100%;
+      object-fit: contain;
+    }
+
+    .header-title-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-title {
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.025em;
+      font-size: 2.5vh;
+    }
+
+    .header-subtitle {
+      font-weight: bold;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      line-height: 1;
+      margin-top: 0.3vh;
+      font-size: 1.5vh;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 1.5vw;
+    }
+
+    .control-btn {
+      padding: 1vh 1.5vw;
+      background-color: var(--card-border);
+      color: var(--text-main);
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      font-size: 1.5vh;
+      transition: background-color 0.2s;
+    }
+
+    .control-btn:hover {
+      background-color: #334155;
+    }
+
+    .control-btn.active {
+      color: var(--success);
+    }
+
+    .control-btn.mute {
+      color: var(--danger);
+      background-color: #450a0a;
+    }
+
+    .clock {
+      font-family: monospace;
+      font-weight: bold;
+      color: var(--text-muted);
+      padding-left: 1.5vw;
+      border-left: 1px solid var(--card-border);
+      font-size: 3vh;
+    }
+
+    /* CORPO PRINCIPAL DO PAINEL */
+    .main-container {
+      height: 84vh;
+      display: flex;
+      padding: 2vh;
+      gap: 2vw;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    /* COLUNA DA CHAMADA PRINCIPAL */
+    .call-panel {
+      background-color: #09090b;
+      border: 2px solid var(--card-border);
+      border-radius: 2vh;
+      padding: 4vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      height: 100%;
+      flex: 1;
+      position: relative;
+    }
+
+    /* Efeito de pulse para chamada ativa */
+    .call-panel.calling {
+      animation: pulse-glow 2s infinite;
+    }
+
+    @keyframes pulse-glow {
+      0% { border-color: var(--card-border); }
+      50% { border-color: rgba(245, 158, 11, 0.4); box-shadow: 0 0 20px rgba(245, 158, 11, 0.1); }
+      100% { border-color: var(--card-border); }
+    }
+
+    .badge-status {
+      display: inline-block;
+      padding: 0.5vh 2vw;
+      background-color: var(--primary);
+      color: #000000;
+      border-radius: 9999px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 2vh;
+      margin-bottom: 2.5vh;
+    }
+
+    .badge-status.atendimento {
+      background-color: var(--success);
+      color: #ffffff;
+    }
+
+    .patient-name {
+      font-weight: 900;
+      color: var(--text-main);
+      letter-spacing: -0.025em;
+      text-transform: uppercase;
+      word-break: break-word;
+      line-height: 1.1;
+      width: 100%;
+      margin-bottom: 2vh;
+      font-size: 8.5vh;
+    }
+
+    .patient-priority {
+      color: var(--text-muted);
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 2.2vh;
+      margin-bottom: 4vh;
+    }
+
+    .room-box {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2vh 4vw;
+      border-radius: 1.5vh;
+      display: inline-block;
+      max-width: 100%;
+    }
+
+    .room-label {
+      color: var(--primary);
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: block;
+      margin-bottom: 0.5vh;
+      font-size: 1.8vh;
+    }
+
+    .room-name {
+      font-weight: 900;
+      color: var(--success);
+      text-transform: uppercase;
+      letter-spacing: -0.025em;
+      font-size: 6.8vh;
+    }
+
+    /* Tela institucional se sem chamadas */
+    .idle-box {
+      display: flex;
+      flex-direction: column;
+      gap: 2vh;
+      max-width: 500px;
+    }
+
+    .idle-shield {
+      height: 15vh;
+      margin-bottom: 1vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .idle-shield img {
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .idle-title {
+      font-size: 3.2vh;
+      font-weight: bold;
+    }
+
+    .idle-desc {
+      color: var(--text-muted);
+      font-size: 2vh;
+      line-height: 1.5;
+    }
+
+    .idle-lgpd {
+      font-size: 1.4vh;
+      color: var(--text-muted);
+      font-weight: bold;
+      text-transform: uppercase;
+      background-color: var(--card-bg);
+      padding: 0.8vh 1.5vw;
+      border-radius: 999px;
+      border: 1px solid var(--card-border);
+      display: inline-block;
+      margin-top: 2vh;
+    }
+
+    /* COLUNA HISTÓRICO */
+    .history-panel {
+      background-color: #09090b;
+      border: 1px solid var(--card-border);
+      border-radius: 2vh;
+      padding: 2.5vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      height: 100%;
+      width: 25vw;
+    }
+
+    .history-title {
+      font-weight: 900;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 1vh;
+      margin-bottom: 1.5vh;
+      font-size: 2.2vh;
+      flex-shrink: 0;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5vh;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .history-item {
+      padding: 1.5vh;
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 1.5vh;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .history-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5vh;
+      overflow: hidden;
+    }
+
+    .history-patient {
+      font-weight: 800;
+      color: var(--text-main);
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 2vh;
+      max-width: 12vw;
+    }
+
+    .history-priority {
+      font-weight: bold;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-size: 1.5vh;
+    }
+
+    .history-room-section {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      flex-shrink: 0;
+    }
+
+    .history-room {
+      font-weight: 900;
+      color: var(--success);
+      text-transform: uppercase;
+      font-size: 2vh;
+    }
+
+    .history-time {
+      color: var(--text-muted);
+      font-weight: bold;
+      font-family: monospace;
+      font-size: 1.5vh;
+      margin-top: 0.2vh;
+    }
+
+    .history-empty {
+      text-align: center;
+      padding: 4vh 0;
+      color: var(--text-muted);
+      font-weight: bold;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2vh;
+    }
+
+    .history-footer {
+      border-top: 1px solid var(--card-border);
+      padding-top: 1.5vh;
+      margin-top: 1.5vh;
+      text-align: center;
+      color: var(--text-muted);
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+      font-size: 1.5vh;
+    }
+
+    /* BARRA DE INFORMAÇÕES ROTATIVA (MARQUEE) */
+    .ticker-bar {
+      height: 6vh;
+      background-color: var(--card-bg);
+      border-top: 1px solid var(--card-border);
+      padding: 0 2vw;
+      display: flex;
+      align-items: center;
+      gap: 1vw;
+      flex-shrink: 0;
+    }
+
+    .ticker-label {
+      font-weight: 900;
+      background-color: var(--primary);
+      color: #000000;
+      padding: 0.5vh 1vw;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+      font-size: 1.6vh;
+    }
+
+    .ticker-content {
+      flex: 1;
+      overflow: hidden;
+      height: 24px;
+      position: relative;
+    }
+
+    .ticker-text {
+      font-weight: 600;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: 0;
+      line-height: 24px;
+      font-size: 2vh;
+      position: absolute;
+      width: 100%;
+      animation: fade-scroll 10s infinite linear;
+    }
+
+    @keyframes fade-scroll {
+      0% { opacity: 0; transform: translateY(10px); }
+      5% { opacity: 1; transform: translateY(0); }
+      90% { opacity: 1; transform: translateY(0); }
+      95% { opacity: 0; transform: translateY(-10px); }
+      100% { opacity: 0; transform: translateY(10px); }
+    }
+
+    /* PORTRAIT ADJUSTMENTS (MONITORES EM RETRATO) */
+    @media (orientation: portrait) {
+      .main-container {
+        flex-direction: column;
+      }
+      .call-panel {
+        height: 48vh;
+      }
+      .history-panel {
+        width: 100%;
+        height: 32vh;
+      }
+      .patient-name {
+        font-size: 6.5vh;
+      }
+      .room-name {
+        font-size: 5vh;
+      }
+      .history-patient {
+        max-width: 50vw;
+      }
+      .header-title {
+        font-size: 2vw;
+      }
+      .header-subtitle {
+        font-size: 1.3vw;
+      }
+    }
+  </style>
+  <script type="module" crossorigin src="/painel-tv/assets/index-CGobtg1Z.js"></script>
+  <script type="module">import'data:text/javascript,if(!import.meta.resolve)throw Error("import.meta.resolve not supported")';import.meta.url;import("_").catch(()=>1);(async function*(){})().next();window.__vite_is_modern_browser=true</script>
+  <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
+</head>
+<body>
+
+  <!-- TELA DE SELEÇÃO DE UNIDADE -->
+  <div id="unit-selection-screen" style="display: none;">
+    <div class="selection-box">
+      <div class="logo-container">
+        <img id="sel-logo" src="/logo-pref.png" alt="Logo">
+      </div>
+      <h1>Painel da TV - Seleção de Unidade</h1>
+      <p>Selecione qual unidade deseja exibir neste monitor de sala de espera para carregar as chamadas dedicadas em tempo real.</p>
+      <div id="sel-unit-list" class="unit-list">
+        <!-- JS irá preencher as unidades aqui -->
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER DO PAINEL -->
+  <header>
+    <div class="header-logo-section">
+      <div class="header-logo-container">
+        <img id="header-logo" src="/logo-pref.png" alt="Logo">
+      </div>
+      <div class="header-title-container">
+        <span id="header-unit-name" class="header-title">Atende Já</span>
+        <span class="header-subtitle">Painel de Chamadas - Modo TV</span>
+      </div>
+    </div>
+
+    <div class="header-controls">
+      <button id="btn-fullscreen" class="control-btn">🗖 Tela Cheia</button>
+      <button id="btn-change-unit" class="control-btn">Trocar Unidade</button>
+      <button id="btn-voice" class="control-btn active">🔊 Voz Ativa</button>
+      <div id="clock-display" class="clock">--:--:--</div>
+    </div>
+  </header>
+
+  <!-- PAINEL CENTRAL -->
+  <div class="main-container">
+    
+    <!-- CHAMADA ATIVA PRINCIPAL -->
+    <div id="main-call-card" class="call-panel">
+      <!-- JS preencherá com dados da chamada ativa ou tela idle -->
+    </div>
+
+    <!-- ÚLTIMAS CHAMADAS -->
+    <div class="history-panel">
+      <h3 class="history-title">Últimas Chamadas</h3>
+      <div id="history-items-container" class="history-list">
+        <!-- JS preencherá as chamadas anteriores -->
+      </div>
+      <div class="history-footer">Agradecemos a colaboração.</div>
+    </div>
+
+  </div>
+
+  <!-- BARRA DE CAMPANHAS / INFORMAÇÕES -->
+  <div class="ticker-bar">
+    <span class="ticker-label">Informa</span>
+    <div class="ticker-content">
+      <p id="ticker-text-element" class="ticker-text">📢 Carregando informações...</p>
+    </div>
+  </div>
+
+  <!-- SCRIPT PRINCIPAL -->
+  <script nomodule>!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();</script>
+  <script nomodule crossorigin id="vite-legacy-polyfill" src="/painel-tv/assets/polyfills-legacy-C0ni7DMD.js"></script>
+  <script nomodule crossorigin id="vite-legacy-entry" data-src="/painel-tv/assets/index-legacy-CEhZAMCx.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
+</body>
+</html>

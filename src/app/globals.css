@@ -1,0 +1,162 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: #f8fafc;
+    --foreground: #0f172a;
+
+    --card: #ffffff;
+    --card-foreground: #0f172a;
+
+    --primary: #0284c7; /* Sky 600 - Azul Profissional */
+    --primary-light: #e0f2fe; /* Sky 100 */
+    --primary-foreground: #ffffff;
+
+    --secondary: #10b981; /* Emerald 500 - Verde Suave */
+    --secondary-light: #d1fae5; /* Emerald 100 */
+    --secondary-foreground: #ffffff;
+
+    --accent: #f59e0b; /* Amber 500 - Chamada de TV / Atenção */
+    --accent-light: #fef3c7;
+    --accent-foreground: #78350f;
+
+    --muted: #f1f5f9; /* Slate 100 */
+    --muted-foreground: #64748b; /* Slate 500 */
+
+    --border: #e2e8f0; /* Slate 200 */
+    --ring: #0284c7;
+
+    --radius: 0.75rem;
+
+    --priority-normal: #3b82f6; /* Blue 500 */
+    --priority-idoso: #f59e0b; /* Amber 500 */
+    --priority-gestante: #ec4899; /* Pink 500 */
+  }
+
+  .dark {
+    --background: #0f172a; /* Slate 900 */
+    --foreground: #f8fafc;
+
+    --card: #1e293b; /* Slate 800 */
+    --card-foreground: #f8fafc;
+
+    --primary: #38bdf8; /* Sky 400 */
+    --primary-light: #075985; /* Sky 800 */
+    --primary-foreground: #0f172a;
+
+    --secondary: #34d399; /* Emerald 400 */
+    --secondary-light: #065f46; /* Emerald 800 */
+    --secondary-foreground: #0f172a;
+
+    --accent: #fbbf24; /* Amber 400 */
+    --accent-light: #78350f;
+    --accent-foreground: #fef3c7;
+
+    --muted: #334155; /* Slate 700 */
+    --muted-foreground: #94a3b8; /* Slate 400 */
+
+    --border: #334155;
+    --ring: #38bdf8;
+
+    --priority-normal: #60a5fa;
+    --priority-idoso: #fbbf24;
+    --priority-gestante: #f472b6;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-light: var(--secondary-light);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-light: var(--accent-light);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+
+  --color-priority-normal: var(--priority-normal);
+  --color-priority-idoso: var(--priority-idoso);
+  --color-priority-gestante: var(--priority-gestante);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Glassmorphism premium utilities */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .glass {
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* TV Screen animations and transitions */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(2, 132, 199, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(2, 132, 199, 0.6);
+  }
+}
+
+.pulse-glow {
+  animation: pulseGlow 2s infinite ease-in-out;
+}
+
+@keyframes callHighlight {
+  0% {
+    background-color: var(--accent-light);
+    transform: scale(1);
+  }
+  50% {
+    background-color: var(--primary-light);
+    transform: scale(1.02);
+  }
+  100% {
+    background-color: var(--card);
+    transform: scale(1);
+  }
+}
+
+.new-call-highlight {
+  animation: callHighlight 1.5s ease-out forwards;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+  border-radius: 9999px;
+  opacity: 0.5;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
